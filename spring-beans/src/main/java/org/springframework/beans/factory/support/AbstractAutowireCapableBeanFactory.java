@@ -1605,7 +1605,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param pvs      the new property values
      */
     //解析并注入依赖属性的过程
-    protected void applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {
+    protected void  applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {
         if (pvs.isEmpty()) {
             return;
         }

@@ -532,6 +532,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
         return this.applicationListeners;
     }
 
+    /**
+     * SpringIOC 容器对Bean 配置资源的载入是从refresh()函数开始的
+     *
+     * @throws BeansException
+     * @throws IllegalStateException
+     */
     @Override
     public void refresh() throws BeansException, IllegalStateException {
         synchronized (this.startupShutdownMonitor) {

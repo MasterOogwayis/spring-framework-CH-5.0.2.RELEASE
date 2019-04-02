@@ -711,6 +711,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
         postProcessWebApplicationContext(wac);
         applyInitializers(wac);
+        // 真正启动 ioc 容器的入口
         wac.refresh();
     }
 
