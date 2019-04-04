@@ -75,6 +75,8 @@ class BeanDefinitionValueResolver {
 
 
     /**
+     * 解析属性值，对注入类型进行转换
+     *
      * Given a PropertyValue, return a value, resolving any references to other
      * beans in the factory if necessary. The value could be:
      * <li>A BeanDefinition, which leads to the creation of a corresponding
@@ -93,7 +95,6 @@ class BeanDefinitionValueResolver {
      * @param value   the value object to resolve
      * @return the resolved object
      */
-    //解析属性值，对注入类型进行转换
     @Nullable
     public Object resolveValueIfNecessary(Object argName, @Nullable Object value) {
         // We must check each value to see whether it requires a runtime reference

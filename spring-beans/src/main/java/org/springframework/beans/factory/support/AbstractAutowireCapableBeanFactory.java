@@ -398,8 +398,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return result;
     }
 
+    /**
+     * 调用BeanPostProcessor后置处理器实例对象初始化之后的处理方法
+     *
+     * @param existingBean the new bean instance
+     * @param beanName     the name of the bean
+     * @return
+     * @throws BeansException
+     */
     @Override
-    //调用BeanPostProcessor后置处理器实例对象初始化之后的处理方法
     public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
             throws BeansException {
 
@@ -515,6 +522,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         // Instantiate the bean.
         //封装被创建的Bean对象
         BeanWrapper instanceWrapper = null;
+        // 若为单例模式，则要删除可能已经创建的 Bean
         if (mbd.isSingleton()) {
             instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
         }
@@ -561,6 +569,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         //这个exposedObject在初始化完成之后返回作为依赖注入完成后的Bean
         Object exposedObject = bean;
         try {
+            // 依赖注入
             //将Bean实例对象封装，并且Bean定义中配置的属性值赋值给实例对象
             populateBean(beanName, mbd, instanceWrapper);
             //初始化Bean对象
@@ -1280,6 +1289,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     /**
+     * 将Bean属性设置到生成的实例对象上
+     *
      * Populate the bean instance in the given BeanWrapper with the property values
      * from the bean definition.
      *
@@ -1287,8 +1298,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param mbd      the bean definition for the bean
      * @param bw       BeanWrapper with bean instance
      */
-
-    //将Bean属性设置到生成的实例对象上
     protected void populateBean(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw) {
         if (bw == null) {
             if (mbd.hasPropertyValues()) {
@@ -1399,6 +1408,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 //为指定名称的属性赋予属性值
                 pvs.add(propertyName, bean);
                 //指定名称属性注册依赖Bean名称，进行属性依赖注入
+                // 这里也只是保存了 相互依赖于被依赖的关系
                 registerDependentBean(propertyName, beanName);
                 if (logger.isDebugEnabled()) {
                     logger.debug("Added autowiring by name from bean name '" + beanName +

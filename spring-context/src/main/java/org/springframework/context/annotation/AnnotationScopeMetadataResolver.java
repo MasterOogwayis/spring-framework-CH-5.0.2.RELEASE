@@ -77,7 +77,12 @@ public class AnnotationScopeMetadataResolver implements ScopeMetadataResolver {
     }
 
 
-    //解析注解Bean定义类中的作用域元信息
+    /**
+     * 解析注解Bean定义类中的作用域元信息
+     *
+     * @param definition the target bean definition
+     * @return
+     */
     @Override
     public ScopeMetadata resolveScopeMetadata(BeanDefinition definition) {
         ScopeMetadata metadata = new ScopeMetadata();

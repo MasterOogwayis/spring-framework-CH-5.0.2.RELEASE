@@ -120,11 +120,19 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
     private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<>(16);
 
     /**
+     * 当前 bean 被其它 bean 依赖的名称集合
+     *
+     * bean name  - >依赖bean名称的集合
+     *
      * Map between dependent bean names: bean name --> Set of dependent bean names
      */
     private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
     /**
+     * 当前 bean 依赖的其他 bean 名称集合
+     *
+     * bean name  - > bean的依赖项的bean名称集
+     *
      * Map between depending bean names: bean name --> Set of bean names for the bean's dependencies
      */
     private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
@@ -424,13 +432,18 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
     }
 
     /**
+     * 为指定的Bean注入依赖的Bean
+     *
+     * beanName 被 dependentBeanName 依赖
+     *
+     * 2个 bean 之间相互依赖的关系，放到关系列表 map 中
+     *
      * Register a dependent bean for the given bean,
      * to be destroyed before the given bean is destroyed.
      *
      * @param beanName          the name of the bean
      * @param dependentBeanName the name of the dependent bean
      */
-    //为指定的Bean注入依赖的Bean
     public void registerDependentBean(String beanName, String dependentBeanName) {
         // A quick check for an existing entry upfront, avoiding synchronization...
         //处理Bean名称，将别名转换为规范的Bean名称
@@ -649,6 +662,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
      * should <i>not</i> have their own mutexes involved in singleton creation,
      * to avoid the potential for deadlocks in lazy-init situations.
      */
+    @Override
     public final Object getSingletonMutex() {
         return this.singletonObjects;
     }

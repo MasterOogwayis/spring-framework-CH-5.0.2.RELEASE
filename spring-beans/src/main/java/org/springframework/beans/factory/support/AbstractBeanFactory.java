@@ -264,7 +264,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             }
             //获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
             //注意：BeanFactory是管理容器中Bean的工厂，而FactoryBean是
-            //创建创建对象的工厂Bean，两者之间有区别
+            //创建 创建对象的工厂Bean，两者之间有区别
             bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
         } else {
             // Fail if we're already creating this bean instance:
@@ -315,20 +315,24 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                 // Guarantee initialization of beans that the current bean depends on.
                 //获取当前Bean所有依赖Bean的名称
                 String[] dependsOn = mbd.getDependsOn();
-                //如果当前Bean有依赖Bean
+                //如果当前Bean有依赖Bean，先要处理依赖 bean
                 if (dependsOn != null) {
                     for (String dep : dependsOn) {
                         if (isDependent(beanName, dep)) {
                             throw new BeanCreationException(mbd.getResourceDescription(), beanName,
                                     "Circular depends-on relationship between '" + beanName + "' and '" + dep + "'");
                         }
-                        //递归调用getBean方法，获取当前Bean的依赖Bean
+                        // 注册 bean 之间的依赖关系，没有其他处理
+                        // dep 被 beanName 依赖.或者说beanName依赖dep
                         registerDependentBean(dep, beanName);
-                        //把被依赖Bean注册给当前依赖的Bean
+                        // 把被依赖Bean注册给当前依赖的Bean
+                        // 递归调用getBean方法，获取当前Bean的依赖Bean
                         getBean(dep);
                     }
                 }
 
+
+                // 到这一步，前面依赖的所有 bean 都创建完了，这里要真正创建我们需要的 bean
                 // Create bean instance.
                 //创建单例模式Bean的实例对象
                 if (mbd.isSingleton()) {
@@ -346,7 +350,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                             throw ex;
                         }
                     });
-                    //获取给定Bean的实例对象
+                    // 获取给定Bean的实例对象
                     bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
                 }
 
@@ -1631,6 +1635,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     }
 
     /**
+     * 获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
+     *
      * Get the object for the given bean instance, either the bean
      * instance itself or its created object in case of a FactoryBean.
      *
@@ -1640,7 +1646,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
      * @param mbd          the merged bean definition
      * @return the object to expose for the bean
      */
-    //获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
     protected Object getObjectForBeanInstance(
             Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 

@@ -237,7 +237,12 @@ public class AnnotationConfigUtils {
         processCommonDefinitionAnnotations(abd, abd.getMetadata());
     }
 
-    //处理Bean定义中通用注解
+    /**
+     * 处理Bean定义中通用注解
+     *
+     * @param abd
+     * @param metadata
+     */
     static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
         AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
         //如果Bean定义中有@Lazy注解，则将该Bean预实例化属性设置为@lazy注解的值
@@ -253,8 +258,9 @@ public class AnnotationConfigUtils {
         if (metadata.isAnnotated(Primary.class.getName())) {
             abd.setPrimary(true);
         }
-        //如果Bean定义中有@ DependsOn注解，则为该Bean设置所依赖的Bean名称，
+        //如果Bean定义中有@DependsOn注解，则为该Bean设置所依赖的Bean名称，
         //容器将确保在实例化该Bean之前首先实例化所依赖的Bean
+        // @DependsOn 我还真没用到过
         AnnotationAttributes dependsOn = attributesFor(metadata, DependsOn.class);
         if (dependsOn != null) {
             abd.setDependsOn(dependsOn.getStringArray("value"));
