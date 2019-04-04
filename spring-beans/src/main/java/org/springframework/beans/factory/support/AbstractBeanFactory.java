@@ -262,9 +262,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                     logger.debug("Returning cached instance of singleton bean '" + beanName + "'");
                 }
             }
-            //获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
-            //注意：BeanFactory是管理容器中Bean的工厂，而FactoryBean是
-            //创建 创建对象的工厂Bean，两者之间有区别
+            // 获取给定Bean的实例对象，主要是完成FactoryBean的相关处理
+            // 注意：BeanFactory是管理容器中Bean的工厂
+            // 而FactoryBean是创建 创建对象的工厂Bean，两者之间有区别
             bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
         } else {
             // Fail if we're already creating this bean instance:

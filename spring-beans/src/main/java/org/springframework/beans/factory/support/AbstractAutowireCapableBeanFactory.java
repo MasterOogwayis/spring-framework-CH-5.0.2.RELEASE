@@ -380,8 +380,15 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return initializeBean(beanName, existingBean, null);
     }
 
+    /**
+     * 调用BeanPostProcessor后置处理器实例对象初始化之前的处理方法
+     *
+     * @param existingBean the new bean instance
+     * @param beanName     the name of the bean
+     * @return
+     * @throws BeansException
+     */
     @Override
-    //调用BeanPostProcessor后置处理器实例对象初始化之前的处理方法
     public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)
             throws BeansException {
         Object result = existingBean;
@@ -573,6 +580,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             //将Bean实例对象封装，并且Bean定义中配置的属性值赋值给实例对象
             populateBean(beanName, mbd, instanceWrapper);
             //初始化Bean对象
+            // AOP初始化从这里开始
             exposedObject = initializeBean(beanName, exposedObject, mbd);
         } catch (Throwable ex) {
             if (ex instanceof BeanCreationException && beanName.equals(((BeanCreationException) ex).getBeanName())) {
@@ -1219,13 +1227,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     /**
+     * 使用默认的无参构造方法实例化Bean对象
+     *
      * Instantiate the given bean using its default constructor.
      *
      * @param beanName the name of the bean
      * @param mbd      the bean definition for the bean
      * @return a BeanWrapper for the new instance
      */
-    //使用默认的无参构造方法实例化Bean对象
     protected BeanWrapper instantiateBean(final String beanName, final RootBeanDefinition mbd) {
         try {
             Object beanInstance;
@@ -1742,6 +1751,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
     /**
+     * 初始容器创建的Bean实例对象，为其添加BeanPostProcessor后置处理器
+     *
      * Initialize the given bean instance, applying factory callbacks
      * as well as init methods and bean post processors.
      * <p>Called from {@link #createBean} for traditionally defined beans,
@@ -1759,7 +1770,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @see #invokeInitMethods
      * @see #applyBeanPostProcessorsAfterInitialization
      */
-    //初始容器创建的Bean实例对象，为其添加BeanPostProcessor后置处理器
     protected Object initializeBean(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd) {
         //JDK的安全机制验证权限
         if (System.getSecurityManager() != null) {

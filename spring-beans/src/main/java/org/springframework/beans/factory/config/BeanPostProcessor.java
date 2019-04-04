@@ -43,6 +43,8 @@ import org.springframework.lang.Nullable;
 public interface BeanPostProcessor {
 
     /**
+     * 为在Bean的初始化前提供回调入口
+     *
      * Apply this BeanPostProcessor to the given new bean instance <i>before</i> any bean
      * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
      * or a custom init-method). The bean will already be populated with property values.
@@ -56,13 +58,14 @@ public interface BeanPostProcessor {
      * @throws org.springframework.beans.BeansException in case of errors
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
      */
-    //为在Bean的初始化前提供回调入口
     @Nullable
     default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 
     /**
+     * 为在Bean的初始化之后提供回调入口
+     *
      * Apply this BeanPostProcessor to the given new bean instance <i>after</i> any bean
      * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
      * or a custom init-method). The bean will already be populated with property values.
@@ -84,7 +87,6 @@ public interface BeanPostProcessor {
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet
      * @see org.springframework.beans.factory.FactoryBean
      */
-    //为在Bean的初始化之后提供回调入口
     @Nullable
     default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
