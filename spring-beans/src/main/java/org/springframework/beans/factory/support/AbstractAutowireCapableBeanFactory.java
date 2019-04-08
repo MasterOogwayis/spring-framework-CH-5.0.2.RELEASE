@@ -1347,7 +1347,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 
             // Add property values based on autowire by name if applicable.
-            //根据Bean名称进行autowiring自动装配处理
+            //根据Bean名称进行autowiring自动装配处理，只保存了属性名称和对应的bean的关系，真正注入的地方在下面
             if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME) {
                 autowireByName(beanName, mbd, bw, newPvs);
             }
@@ -1388,7 +1388,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         if (pvs != null) {
-            //对属性进行注入
+            // *** 对属性进行注入 ***
             applyPropertyValues(beanName, mbd, bw, pvs);
         }
     }
@@ -1614,6 +1614,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     /**
+     * 解析并注入依赖属性的过程
+     *
      * Apply the given property values, resolving any runtime references
      * to other beans in this bean factory. Must use deep copy, so we
      * don't permanently modify this property.
@@ -1623,7 +1625,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param bw       the BeanWrapper wrapping the target object
      * @param pvs      the new property values
      */
-    //解析并注入依赖属性的过程
     protected void  applyPropertyValues(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {
         if (pvs.isEmpty()) {
             return;

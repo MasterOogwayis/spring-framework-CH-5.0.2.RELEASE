@@ -83,6 +83,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
     }
 
     /**
+     * Bean工厂生产Bean实例对象
+     *
      * Obtain an object to expose from the given FactoryBean.
      *
      * @param factory           the FactoryBean instance
@@ -92,7 +94,6 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
      * @throws BeanCreationException if FactoryBean object creation failed
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
-    //Bean工厂生产Bean实例对象
     protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
         //Bean工厂是单态模式，并且Bean工厂缓存中存在指定名称的Bean实例对象
         if (factory.isSingleton() && containsSingleton(beanName)) {

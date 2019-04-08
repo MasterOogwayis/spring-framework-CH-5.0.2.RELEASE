@@ -186,21 +186,46 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     // Implementation of BeanFactory interface
     //---------------------------------------------------------------------
 
-    //获取IOC容器中指定名称的Bean
+    /**
+     * 获取IOC容器中指定名称的Bean
+     *
+     * @param name the name of the bean to retrieve
+     * @return
+     * @throws BeansException
+     */
     @Override
     public Object getBean(String name) throws BeansException {
         //doGetBean才是真正向IoC容器获取被管理Bean的过程
         return doGetBean(name, null, null, false);
     }
 
-    //获取IOC容器中指定名称和类型的Bean
+    /**
+     * 获取IOC容器中指定名称和类型的Bean
+     *
+     * @param name         the name of the bean to retrieve
+     * @param requiredType type the bean must match. Can be an interface or superclass
+     *                     of the actual class, or {@code null} for any match. For example, if the value
+     *                     is {@code Object.class}, this method will succeed whatever the class of the
+     *                     returned instance.
+     * @param <T>
+     * @return
+     * @throws BeansException
+     */
     @Override
     public <T> T getBean(String name, @Nullable Class<T> requiredType) throws BeansException {
         //doGetBean才是真正向IoC容器获取被管理Bean的过程
         return doGetBean(name, requiredType, null, false);
     }
 
-    //获取IOC容器中指定名称和参数的Bean
+    /**
+     * 获取IOC容器中指定名称和参数的Bean
+     *
+     * @param name the name of the bean to retrieve
+     * @param args arguments to use when creating a bean instance using explicit arguments
+     *             (only applied when creating a new instance as opposed to retrieving an existing one)
+     * @return
+     * @throws BeansException
+     */
     @Override
     public Object getBean(String name, Object... args) throws BeansException {
         //doGetBean才是真正向IoC容器获取被管理Bean的过程
@@ -208,6 +233,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     }
 
     /**
+     * 获取IOC容器中指定名称、类型和参数的Bean
+     *
      * Return an instance, which may be shared or independent, of the specified bean.
      *
      * @param name         the name of the bean to retrieve
@@ -217,7 +244,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
      * @return an instance of the bean
      * @throws BeansException if the bean could not be created
      */
-    //获取IOC容器中指定名称、类型和参数的Bean
     public <T> T getBean(String name, @Nullable Class<T> requiredType, @Nullable Object... args)
             throws BeansException {
         //doGetBean才是真正向IoC容器获取被管理Bean的过程
@@ -225,6 +251,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     }
 
     /**
+     * 真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方
+     *
      * Return an instance, which may be shared or independent, of the specified bean.
      *
      * @param name          the name of the bean to retrieve
@@ -237,7 +265,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
      * @throws BeansException if the bean could not be created
      */
     @SuppressWarnings("unchecked")
-    //真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方
     protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
                               @Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
