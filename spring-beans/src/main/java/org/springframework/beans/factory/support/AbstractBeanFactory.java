@@ -253,6 +253,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     /**
      * 真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方
      *
+     * 注意：原型模式 prototype 不支持循环依赖，所以...
+     *
      * Return an instance, which may be shared or independent, of the specified bean.
      *
      * @param name          the name of the bean to retrieve
@@ -279,13 +281,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
         Object sharedInstance = getSingleton(beanName);
         //IOC容器创建单例模式Bean实例对象
         if (sharedInstance != null && args == null) {
+            // 如果指定名称的Bean在容器中已有单例模式的Bean被创建
             if (logger.isDebugEnabled()) {
-                //如果指定名称的Bean在容器中已有单例模式的Bean被创建
-                //直接返回已经创建的Bean
                 if (isSingletonCurrentlyInCreation(beanName)) {
+                    // 获取到的这个 bean 是他的早期引用，他正在创建，还未注入属性或初始化
                     logger.debug("Returning eagerly cached instance of singleton bean '" + beanName +
                             "' that is not fully initialized yet - a consequence of a circular reference");
                 } else {
+                    // 拿到的这个 bean 是 已经注入属性并初始化好完全体
                     logger.debug("Returning cached instance of singleton bean '" + beanName + "'");
                 }
             }
@@ -294,19 +297,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             // 而FactoryBean是创建 创建对象的工厂Bean，两者之间有区别
             bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
         } else {
+            // 一般情况 刚开始的 bean 什么都没有走这里！！！
+
             // Fail if we're already creating this bean instance:
             // We're assumably within a circular reference.
-            //缓存没有正在创建的单例模式Bean
-            //缓存中已经有已经创建的原型模式Bean
-            //但是由于循环引用的问题导致实例化对象失败
+            // 缓存没有正在创建的单例模式Bean，但是有已经创建的原型模式Bean
+            // 但是由于循环引用的问题导致实例化对象失败
+            // 原型模式不支持循环依赖，为什么? A → B 但是 B 有多个实例，该注入哪一个？
             if (isPrototypeCurrentlyInCreation(beanName)) {
                 throw new BeanCurrentlyInCreationException(beanName);
             }
 
             // Check if bean definition exists in this factory.
-            //对IOC容器中是否存在指定名称的BeanDefinition进行检查，首先检查是否
-            //能在当前的BeanFactory中获取的所需要的Bean，如果不能则委托当前容器
-            //的父级容器去查找，如果还是找不到则沿着容器的继承体系向父级容器查找
+            // 对IOC容器中是否存在指定名称的 BeanDefinition 进行检查，首先检查是否
+            // 能在当前的 BeanFactory 中获取的所需要的Bean，如果不能则委托当前容器
+            // 的父级容器去查找，如果还是找不到则沿着容器的继承体系向父级容器查找
             BeanFactory parentBeanFactory = getParentBeanFactory();
             //当前容器的父级容器存在，且当前容器中不存在指定名称的Bean
             if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
@@ -329,7 +334,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
             //创建的Bean是否需要进行类型验证，一般不需要
             if (!typeCheckOnly) {
-                //向容器标记指定的Bean已经被创建
+                // 缓存中没有 bean ，也没有 parentBeanFactory 获取bean，则准备自己开始创建 bean
+                // 首先向容器标记指定的Bean已经被创建
                 markBeanAsCreated(beanName);
             }
 
@@ -340,9 +346,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                 checkMergedBeanDefinition(mbd, beanName, args);
 
                 // Guarantee initialization of beans that the current bean depends on.
-                //获取当前Bean所有依赖Bean的名称
+                // 获取当前Bean所有依赖Bean的名称
                 String[] dependsOn = mbd.getDependsOn();
-                //如果当前Bean有依赖Bean，先要处理依赖 bean
+                // 如果当前Bean有依赖Bean，先要处理依赖 bean
+                // 大部分 bean 没有 @DependsOn 这个注解的，依赖 bean 在注入的时候 实时使用 getBean()递归获取
                 if (dependsOn != null) {
                     for (String dep : dependsOn) {
                         if (isDependent(beanName, dep)) {
@@ -359,8 +366,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                 }
 
 
-                // 到这一步，前面依赖的所有 bean 都创建完了，这里要真正创建我们需要的 bean
                 // Create bean instance.
+                // 到这一步，要真正创建我们需要的 bean
                 //创建单例模式Bean的实例对象
                 if (mbd.isSingleton()) {
                     //这里使用了一个匿名内部类，创建Bean实例对象，并且注册给所依赖的对象

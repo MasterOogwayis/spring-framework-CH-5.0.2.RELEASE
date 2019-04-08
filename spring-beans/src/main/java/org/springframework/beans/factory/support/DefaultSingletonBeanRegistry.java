@@ -212,13 +212,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
      */
     @Nullable
     protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-        // 1. 在已创建的类里面找
+        // 1. 在已创建的 bean 里面找
         Object singletonObject = this.singletonObjects.get(beanName);
         if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
             // 2. 没找到，但是这个 bean 正在被创建
             synchronized (this.singletonObjects) {
                 singletonObject = this.singletonObjects.get(beanName);
                 if (singletonObject == null && allowEarlyReference) {
+                    // 3. 从singletonFactory里面取，通常正在创建的 bean 会尽早将引用放到缓存
+                    // ObjectFactoy.getObject() 获取到的 正是这个正在创建的 bean，刚好 new 但是还未属性注入
                     ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
                     if (singletonFactory != null) {
                         singletonObject = singletonFactory.getObject();
@@ -262,7 +264,18 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
                     this.suppressedExceptions = new LinkedHashSet<>();
                 }
                 try {
+                    // singletonFactory 是一个匿名内部类，实际上调用了 AbstractAutowireCapableBeanFactory.createBean()
+                    // 1. createBean → doCreateBean，doCreateBean首先会实例化一个 A的对象 bean，但是还未注入属性和初始化
+                    //    然后将内部类 ObjectFactory(实际上返回了 A的初始对象) 放入 singletonFactories 缓存
+                    //    注意，放的是 刚 new 的对象，还未进行属性注入和初始化
+                    /** @see AbstractAutowireCapableBeanFactory#addSingletonFactory(String, ObjectFactory)  */
+                    // 2. 接着属性注入的时候可能涉及到循环依赖，这时候 因为 A 正在创建，并加入了缓存 singletonFactories
+                    //    singletonObjects 里面当然找不到 A ，但是 B 可以从 singletonFactories里面获取ObjectFactory，
+                    //    并且通过getObject()拿到 A 的引用
+                    /** @see #getSingleton(String)  */
                     singletonObject = singletonFactory.getObject();
+                    // 在 createBean 执行完以后，A 已经注入属性和初始化。在下面会将已经初始化的 bean 放入 singletonObjects
+                    // 然后 删除 singletonFactorie和earlySingletonObject
                     newSingleton = true;
                 } catch (IllegalStateException ex) {
                     // Has the singleton object implicitly appeared in the meantime ->
@@ -285,7 +298,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
                     afterSingletonCreation(beanName);
                 }
                 if (newSingleton) {
-                    // 创建好以后添加到缓存
+                    // 3. 创建好以后添加到缓存，singletonObjects。然后将 singletonFactorie、earlySingletonObject 删除
                     addSingleton(beanName, singletonObject);
                 }
             }
