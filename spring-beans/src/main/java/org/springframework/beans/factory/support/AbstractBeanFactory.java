@@ -187,6 +187,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     //---------------------------------------------------------------------
 
     /**
+     * doGetBean才是真正向IoC容器获取被管理Bean的过程
      * 获取IOC容器中指定名称的Bean
      *
      * @param name the name of the bean to retrieve
@@ -195,7 +196,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
      */
     @Override
     public Object getBean(String name) throws BeansException {
-        //doGetBean才是真正向IoC容器获取被管理Bean的过程
         return doGetBean(name, null, null, false);
     }
 
@@ -268,14 +268,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
                               @Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
-        //根据指定的名称获取被管理Bean的名称，剥离指定名称中对容器的相关依赖
-        //如果指定的是别名，将别名转换为规范的Bean名称
+        // 根据指定的名称获取被管理Bean的名称，剥离指定名称中对容器的相关依赖
+        // 如果指定的是别名，将别名转换为规范的Bean名称
         final String beanName = transformedBeanName(name);
         Object bean;
 
         // Eagerly check singleton cache for manually registered singletons.
-        //先从缓存中取是否已经有被创建过的单态类型的Bean
-        //对于单例模式的Bean整个IOC容器中只创建一次，不需要重复创建
+        // 先从缓存中取是否已经有被创建过的单态类型的Bean
+        // 对于单例模式的Bean整个IOC容器中只创建一次，不需要重复创建
         Object sharedInstance = getSingleton(beanName);
         //IOC容器创建单例模式Bean实例对象
         if (sharedInstance != null && args == null) {

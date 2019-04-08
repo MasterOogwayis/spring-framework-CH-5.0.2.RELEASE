@@ -127,6 +127,8 @@ public class AnnotatedBeanDefinitionReader {
 
 
     /**
+     * 注册多个注解Bean定义类
+     *
      * Register one or more annotated classes to be processed.
      * <p>Calls to {@code register} are idempotent; adding the same
      * annotated class more than once has no additional effect.
@@ -134,7 +136,6 @@ public class AnnotatedBeanDefinitionReader {
      * @param annotatedClasses one or more annotated classes,
      *                         e.g. {@link Configuration @Configuration} classes
      */
-    //注册多个注解Bean定义类
     public void register(Class<?>... annotatedClasses) {
         for (Class<?> annotatedClass : annotatedClasses) {
             registerBean(annotatedClass);
@@ -142,12 +143,13 @@ public class AnnotatedBeanDefinitionReader {
     }
 
     /**
+     * 注册一个注解Bean定义类
+     *
      * Register a bean from the given bean class, deriving its metadata from
      * class-declared annotations.
      *
      * @param annotatedClass the class of the bean
      */
-    //注册一个注解Bean定义类
     public void registerBean(Class<?> annotatedClass) {
         doRegisterBean(annotatedClass, null, null, null);
     }
@@ -182,6 +184,8 @@ public class AnnotatedBeanDefinitionReader {
     }
 
     /**
+     * Bean定义读取器注册注解Bean定义的入口方法
+     *
      * Register a bean from the given bean class, deriving its metadata from
      * class-declared annotations.
      *
@@ -189,7 +193,6 @@ public class AnnotatedBeanDefinitionReader {
      * @param qualifiers     specific qualifier annotations to consider,
      *                       in addition to qualifiers at the bean class level
      */
-    //Bean定义读取器注册注解Bean定义的入口方法
     @SuppressWarnings("unchecked")
     public void registerBean(Class<?> annotatedClass, Class<? extends Annotation>... qualifiers) {
         doRegisterBean(annotatedClass, null, null, qualifiers);
@@ -242,29 +245,29 @@ public class AnnotatedBeanDefinitionReader {
         ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
         //为注解Bean定义设置作用域
         abd.setScope(scopeMetadata.getScopeName());
-        //为注解Bean定义生成Bean名称
+        // 为注解Bean定义生成Bean名称
         // 从注解中获取名称，若没有就使用类名首字母小写，若类名前2个字母为大写，则直接使用类名不处理
         String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
-        //处理注解Bean定义中的通用注解 @Lazy, @Primary, @DependsOn, @Role, @Description
+        // 处理注解Bean定义中的通用注解 @Lazy, @Primary, @DependsOn, @Role, @Description
         AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
-        //如果在向容器注册注解Bean定义时，使用了额外的限定符注解，则解析限定符注解。
-        //主要是配置的关于autowiring自动依赖注入装配的限定条件，即 @Qualifier 注解
-        //Spring自动依赖注入装配默认是按类型装配，如果使用 @Qualifier 则按名称
+        // 如果在向容器注册注解Bean定义时，使用了额外的限定符注解，则解析限定符注解。
+        // 主要是配置的关于autowiring自动依赖注入装配的限定条件，即 @Qualifier 注解
+        // Spring自动依赖注入装配默认是按类型装配，如果使用 @Qualifier 则按名称
         if (qualifiers != null) {
             for (Class<? extends Annotation> qualifier : qualifiers) {
-                //如果配置了@Primary注解，设置该Bean为autowiring自动依赖注入装//配时的首选
+                // 如果配置了@Primary注解，设置该Bean为autowiring自动依赖注入装//配时的首选
                 if (Primary.class == qualifier) {
                     abd.setPrimary(true);
                 }
-                //如果配置了@Lazy注解，则设置该Bean为非延迟初始化，如果没有配置，
-                //则该Bean为预实例化
+                // 如果配置了@Lazy注解，则设置该Bean为非延迟初始化，如果没有配置，
+                // 则该Bean为预实例化
                 else if (Lazy.class == qualifier) {
                     abd.setLazyInit(true);
                 }
-                //如果使用了除@Primary和@Lazy以外的其他注解，则为该Bean添加一
-                //个autowiring自动依赖注入装配限定符，该Bean在进autowiring
-                //自动依赖注入装配时，根据名称装配限定符指定的Bean
+                // 如果使用了除@Primary和@Lazy以外的其他注解，则为该Bean添加一
+                // 个autowiring自动依赖注入装配限定符，该Bean在进autowiring
+                // 自动依赖注入装配时，根据名称装配限定符指定的Bean
                 else {
                     abd.addQualifier(new AutowireCandidateQualifier(qualifier));
                 }
@@ -277,7 +280,9 @@ public class AnnotatedBeanDefinitionReader {
         // 原对象，创建一个指定Bean名称的Bean定义对象，封装注解Bean定义类数据
         BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
         // 根据注解Bean定义类中配置的作用域，创建相应的代理对象
-        // 代理对象，这里原对象已经被注入了IOC，返回的是代理对象
+        // 此行代码与动态代理和 scope 注解有关，但是在本案例中没有做任何操作，只是返回了传入的 definitionHolder
+        // 对于一般没有使用 @Scope 注解或者 @Scope 注解为默认的 bean，此时 scopedProxyMode 是等于 ScopedProxyMode.NO 的。
+        // 对于 scopedProxyMode 不为 NO 的 bean，均为需要使用动态代理进行创建的对象，区别只是使用 jdk 自带的 api 还是使用 cglib 包
         definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
         //向IOC容器注册注解Bean类定义对象
         BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);

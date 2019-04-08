@@ -50,11 +50,16 @@ public abstract class ScopedProxyUtils {
     public static BeanDefinitionHolder createScopedProxy(BeanDefinitionHolder definition,
                                                          BeanDefinitionRegistry registry, boolean proxyTargetClass) {
 
+        // beanName
         String originalBeanName = definition.getBeanName();
+        //
         BeanDefinition targetDefinition = definition.getBeanDefinition();
+        // scopedTarget. + beanName
         String targetBeanName = getTargetBeanName(originalBeanName);
 
-        // Create a scoped proxy definition for the original bean name,
+        // 为原始bean名称创建范围代理定义，将目标bean“隐藏”在内部目标定义中。
+        // 以下代码用来组装一个动态代理的工厂 bean，这个 bean 是用来动态代理的主体
+        //  Create a scoped proxy definition for the original bean name,
         // "hiding" the target bean in an internal target definition.
         RootBeanDefinition proxyDefinition = new RootBeanDefinition(ScopedProxyFactoryBean.class);
         proxyDefinition.setDecoratedDefinition(new BeanDefinitionHolder(targetDefinition, targetBeanName));
@@ -86,6 +91,7 @@ public abstract class ScopedProxyUtils {
 
         // Return the scoped proxy definition as primary bean definition
         // (potentially an inner bean).
+        // 返回的其实是动态代理所需要的 FactoryBean
         return new BeanDefinitionHolder(proxyDefinition, originalBeanName, definition.getAliases());
     }
 

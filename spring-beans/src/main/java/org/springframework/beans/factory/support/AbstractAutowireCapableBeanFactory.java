@@ -508,6 +508,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     /**
+     * 真正创建Bean的方法
+     *
      * Actually create the specified bean. Pre-creation processing has already happened
      * at this point, e.g. checking {@code postProcessBeforeInstantiation} callbacks.
      * <p>Differentiates between default bean instantiation, use of a
@@ -522,7 +524,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @see #instantiateUsingFactoryMethod
      * @see #autowireConstructor
      */
-    //真正创建Bean的方法
     protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args)
             throws BeanCreationException {
 
@@ -567,7 +568,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 logger.debug("Eagerly caching bean '" + beanName +
                         "' to allow for resolving potential circular references");
             }
-            //这里是一个匿名内部类，为了防止循环引用，尽早持有对象的引用
+            // 这里是一个匿名内部类，为了防止循环引用，尽早持有对象的引用
+            // 将对象尽早放入缓存，以防循环引用
             addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
         }
 

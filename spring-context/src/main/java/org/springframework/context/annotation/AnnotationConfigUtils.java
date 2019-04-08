@@ -279,20 +279,28 @@ public class AnnotationConfigUtils {
         }
     }
 
-    //根据作用域为Bean应用引用的代码模式
+    /**
+     * 根据作用域为Bean应用引用的代码模式
+     *
+     * @param metadata
+     * @param definition
+     * @param registry
+     * @return
+     */
     static BeanDefinitionHolder applyScopedProxyMode(
             ScopeMetadata metadata, BeanDefinitionHolder definition, BeanDefinitionRegistry registry) {
 
         //获取注解Bean定义类中@Scope注解的proxyMode属性值
         ScopedProxyMode scopedProxyMode = metadata.getScopedProxyMode();
         //如果配置的@Scope注解的proxyMode属性值为NO，则不应用代理模式
+        // DEFAULT 会在前面被转成 NO
         if (scopedProxyMode.equals(ScopedProxyMode.NO)) {
             return definition;
         }
         //获取配置的@Scope注解的proxyMode属性值，如果为TARGET_CLASS
         //则返回true，如果为INTERFACES，则返回false
         boolean proxyTargetClass = scopedProxyMode.equals(ScopedProxyMode.TARGET_CLASS);
-        //为注册的Bean创建相应模式的代理对象
+        //为注册的Bean创建相应模式的代理对象,连向 spring-aop 包下的类来处理
         return ScopedProxyCreator.createScopedProxy(definition, registry, proxyTargetClass);
     }
 
