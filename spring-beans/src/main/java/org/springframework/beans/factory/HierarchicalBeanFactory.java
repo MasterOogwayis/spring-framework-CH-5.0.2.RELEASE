@@ -36,6 +36,9 @@ import org.springframework.lang.Nullable;
 public interface HierarchicalBeanFactory extends BeanFactory {
 
     /**
+     * 分层的模型，可以返回父级 factory
+     * 和 ClassLoader 类似，这种关系并不一定是通过继承来实现，他通过持有一个 parentFactory 对象来实现关系
+     *
      * Return the parent bean factory, or {@code null} if there is none.
      */
     @Nullable

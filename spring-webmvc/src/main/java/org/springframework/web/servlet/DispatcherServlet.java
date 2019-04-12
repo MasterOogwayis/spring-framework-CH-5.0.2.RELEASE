@@ -644,6 +644,7 @@ public class DispatcherServlet extends FrameworkServlet {
      * Initialize the HandlerMappings used by this class.
      * <p>If no HandlerMapping beans are defined in the BeanFactory for this namespace,
      * we default to BeanNameUrlHandlerMapping.
+     * @param context
      */
     private void initHandlerMappings(ApplicationContext context) {
         this.handlerMappings = null;

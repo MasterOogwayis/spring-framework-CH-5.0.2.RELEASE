@@ -24,7 +24,8 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
- * 这些 Bean 是可列表化的
+ * 这些 Bean 是可列表化的，可以通过各种方式查找到他
+ * 比如通过 beanName, class类型，注解 等支持可查询bean
  *
  * Extension of the {@link BeanFactory} interface to be implemented by bean factories
  * that can enumerate all their bean instances, rather than attempting bean lookup
@@ -60,6 +61,9 @@ import java.util.Map;
 public interface ListableBeanFactory extends BeanFactory {
 
     /**
+     * 检查此bean工厂是否包含具有给定名称的bean定义。 不考虑此工厂可能参与的任何层次结构，
+     * 并忽略已注册的任何单例bean除bean定义之外的其他方法。
+     *
      * Check if this bean factory contains a bean definition with the given name.
      * <p>Does not consider any hierarchy this factory may participate in,
      * and ignores any singleton beans that have been registered by
@@ -72,6 +76,8 @@ public interface ListableBeanFactory extends BeanFactory {
     boolean containsBeanDefinition(String beanName);
 
     /**
+     * 不考虑任何层次结构，只在当前 factory 中查找
+     *
      * Return the number of beans defined in the factory.
      * <p>Does not consider any hierarchy this factory may participate in,
      * and ignores any singleton beans that have been registered by

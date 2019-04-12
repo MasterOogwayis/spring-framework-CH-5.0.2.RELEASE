@@ -227,7 +227,9 @@ public interface BeanFactory {
 
 
     /**
-     * 提供对bean的检索，看看是否在IOC容器有这个名字的bean
+     * 提供对bean的检索，看看是否在IOC容器有这个名字的bean，可以通过 继承关系从 祖先父工厂中查找
+     *
+     * @see HierarchicalBeanFactory#containsLocalBean(String)  只能搜索当前的容器，不会根据关系往上查找
      *
      * Does this bean factory contain a bean definition or externally registered singleton
      * instance with the given name?

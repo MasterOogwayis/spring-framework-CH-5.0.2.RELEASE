@@ -780,7 +780,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     // Implementation of BeanDefinitionRegistry interface
     //---------------------------------------------------------------------
 
-    //向IOC容器注册解析的BeanDefiniton
+    /**
+     * 向IOC容器注册解析的 BeanDefiniton
+     *
+     * @param beanName       the name of the bean instance to register
+     * @param beanDefinition definition of the bean instance to register
+     * @throws BeanDefinitionStoreException
+     */
     @Override
     public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
             throws BeanDefinitionStoreException {

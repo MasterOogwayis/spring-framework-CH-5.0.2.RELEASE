@@ -342,6 +342,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             try {
                 //根据指定Bean名称获取其父级的Bean定义
                 //主要解决Bean继承时子类合并父类公共属性问题
+                // 举个简单的例子，注解是可以继承生效的，有些常用注解被写到了父类
                 final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
                 checkMergedBeanDefinition(mbd, beanName, args);
 
