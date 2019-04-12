@@ -273,6 +273,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
                     //    singletonObjects 里面当然找不到 A ，但是 B 可以从 singletonFactories里面获取ObjectFactory，
                     //    并且通过getObject()拿到 A 的引用
                     /** @see #getSingleton(String)  */
+                    /** @see AbstractAutowireCapableBeanFactory#createBean(String, RootBeanDefinition, Object[]) */
+                    /** @see AbstractAutowireCapableBeanFactory#doCreateBean(String, RootBeanDefinition, Object[]) */
                     singletonObject = singletonFactory.getObject();
                     // 在 createBean 执行完以后，A 已经注入属性和初始化。在下面会将已经初始化的 bean 放入 singletonObjects
                     // 然后 删除 singletonFactorie和earlySingletonObject

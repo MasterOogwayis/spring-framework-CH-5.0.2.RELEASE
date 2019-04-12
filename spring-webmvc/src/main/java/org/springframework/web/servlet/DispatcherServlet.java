@@ -39,6 +39,8 @@ import org.springframework.web.context.request.async.WebAsyncUtils;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
 
@@ -66,7 +68,7 @@ import java.util.*;
  * {@link org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping} and
  * {@link org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping}.
  * HandlerMapping objects can be defined as beans in the servlet's application context,
- * implementing the HandlerMapping interface, overriding the default HandlerMapping if
+ * implementing the HandlerMapping interface, overriding the default HandlerMapping ifOUTPUT_FLASH_MAP_ATTRIBUTE
  * present. HandlerMappings can be given any bean name (they are tested by type).
  *
  * <li>It can use any {@link HandlerAdapter}; this allows for using any handler interface.
@@ -334,6 +336,11 @@ public class DispatcherServlet extends FrameworkServlet {
     private MultipartResolver multipartResolver;
 
     /**
+     * 在下面我们有看到ViewResolver 的resolveViewName()方法，需要两个参数。那么第
+     * 二个参数Locale 是从哪来的呢，这就是LocaleResolver 要做的事了。LocaleResolver
+     * 用于从request 中解析出Locale, 在中国大陆地区，Locale 当然就会是zh-CN 之类，
+     * 用来表示一个区域。这个类也是i18n 的基础
+     * <p>
      * LocaleResolver used by this servlet
      */
     @Nullable
@@ -364,6 +371,10 @@ public class DispatcherServlet extends FrameworkServlet {
     private List<HandlerExceptionResolver> handlerExceptionResolvers;
 
     /**
+     * 这个组件的作用，在于从Request 中获取viewName. 因为ViewResolver 是根据
+     * ViewName 查找View, 但有的Handler 处理完成之后，没有设置View 也没有设置
+     * ViewName， 便要通过这个组件来从Request 中查找viewName
+     * <p>
      * RequestToViewNameTranslator used by this servlet
      */
     @Nullable
@@ -371,12 +382,19 @@ public class DispatcherServlet extends FrameworkServlet {
 
     /**
      * FlashMapManager used by this servlet
+     * <p>
+     * OUTPUT_FLASH_MAP_ATTRIBUTE
      */
     @Nullable
     private FlashMapManager flashMapManager;
 
     /**
+     * 视图解析器
+     * <p>
      * List of ViewResolvers used by this servlet
+     *
+     * @see InternalResourceViewResolver   默认的，针对 jsp 的
+     * @see FreeMarkerViewResolver
      */
     @Nullable
     private List<ViewResolver> viewResolvers;
@@ -534,7 +552,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
     /**
      * 初始化 spring 9大组件
-     *
+     * <p>
      * Initialize the strategy objects that this servlet uses.
      * <p>May be overridden in subclasses in order to initialize further strategy objects.
      */
@@ -977,19 +995,19 @@ public class DispatcherServlet extends FrameworkServlet {
     }
 
     /**
+     * 中央控制器,控制请求的转发
+     * <p>
      * Process the actual dispatching to the handler.
      * <p>The handler will be obtained by applying the servlet's HandlerMappings in order.
      * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
      * to find the first that supports the handler class.
      * <p>All HTTP methods are handled by this method. It's up to HandlerAdapters or handlers
      * themselves to decide which methods are acceptable.
-     * @param request current HTTP request
+     *
+     * @param request  current HTTP request
      * @param response current HTTP response
      * @throws Exception in case of any kind of processing failure
      */
-    /**
-     * 中央控制器,控制请求的转发
-     **/
     protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpServletRequest processedRequest = request;
         HandlerExecutionChain mappedHandler = null;
@@ -1008,9 +1026,9 @@ public class DispatcherServlet extends FrameworkServlet {
 
                 // Determine handler for the current request.
                 // 2.取得处理当前请求的controller,这里也称为hanlder,处理器,
-                // 	 第一个步骤的意义就在这里体现了.这里并不是直接返回controller,
-                //	 而是返回的HandlerExecutionChain请求处理器链对象,
-                //	 该对象封装了handler和interceptors.
+                // 第一个步骤的意义就在这里体现了.这里并不是直接返回controller,
+                // 而是返回的HandlerExecutionChain请求处理器链对象,
+                // 该对象封装了handler和interceptors.
                 mappedHandler = getHandler(processedRequest);
                 // 如果handler为空,则返回404
                 if (mappedHandler == null) {

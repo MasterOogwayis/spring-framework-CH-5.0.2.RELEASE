@@ -517,6 +517,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
     /**
+     * 初始化IOC 容器，最终会调用refresh()方法
+     *
      * 在之前 ContextLoaderListener 加载的时候已经创建了 WebApplicationContext 实例，这里是对这个实例进一步补充初始化
      *
      * Overridden method of {@link HttpServletBean}, invoked after any bean properties

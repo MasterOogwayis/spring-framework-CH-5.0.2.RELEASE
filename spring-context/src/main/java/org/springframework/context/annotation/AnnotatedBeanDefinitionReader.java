@@ -232,7 +232,8 @@ public class AnnotatedBeanDefinitionReader {
     <T> void doRegisterBean(Class<T> annotatedClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
                             @Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
 
-        //根据指定的注解Bean定义类，创建Spring容器中对注解Bean的封装的数据结构
+        // 根据指定的注解Bean定义类，创建Spring容器中对注解Bean的封装的数据结构
+        // 记录了 class 信息 和注解信息
         AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
         if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
             return;
@@ -249,7 +250,7 @@ public class AnnotatedBeanDefinitionReader {
         // 从注解中获取名称，若没有就使用类名首字母小写，若类名前2个字母为大写，则直接使用类名不处理
         String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
 
-        // 处理注解Bean定义中的通用注解 @Lazy, @Primary, @DependsOn, @Role, @Description
+        // 解析注解 Bean 中的通用注解 @Lazy, @Primary, @DependsOn, @Role, @Description
         AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
         // 如果在向容器注册注解Bean定义时，使用了额外的限定符注解，则解析限定符注解。
         // 主要是配置的关于autowiring自动依赖注入装配的限定条件，即 @Qualifier 注解

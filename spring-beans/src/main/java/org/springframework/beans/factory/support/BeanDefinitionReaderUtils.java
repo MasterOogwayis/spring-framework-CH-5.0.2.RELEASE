@@ -136,13 +136,14 @@ public class BeanDefinitionReaderUtils {
     }
 
     /**
+     * 将解析的BeanDefinitionHold注册到容器中
+     *
      * Register the given bean definition with the given bean factory.
      *
      * @param definitionHolder the bean definition including name and aliases
      * @param registry         the bean factory to register with
      * @throws BeanDefinitionStoreException if registration failed
      */
-    //将解析的BeanDefinitionHold注册到容器中
     public static void registerBeanDefinition(
             BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
             throws BeanDefinitionStoreException {

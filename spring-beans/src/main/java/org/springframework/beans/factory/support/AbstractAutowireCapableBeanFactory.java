@@ -529,12 +529,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throws BeanCreationException {
 
         // Instantiate the bean.
-        //封装被创建的Bean对象
+        // 包装被创建的Bean对象
         BeanWrapper instanceWrapper = null;
         // 若为单例模式，则要删除可能已经创建的 Bean
         if (mbd.isSingleton()) {
             instanceWrapper = this.factoryBeanInstanceCache.remove(beanName);
         }
+
+        // 注意 spring 是无法解决构造器注入的循环依赖
         if (instanceWrapper == null) {
             instanceWrapper = createBeanInstance(beanName, mbd, args);
         }
@@ -546,7 +548,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         // Allow post-processors to modify the merged bean definition.
-        // 调用PostProcessor后置处理器
+        // 调用 PostProcessor 后置处理器
         synchronized (mbd.postProcessingLock) {
             if (!mbd.postProcessed) {
                 try {
@@ -569,8 +571,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 logger.debug("Eagerly caching bean '" + beanName +
                         "' to allow for resolving potential circular references");
             }
-            // 这里是一个匿名内部类，为了防止循环引用，尽早持有对象的引用
-            // 将对象尽早放入缓存，以防循环引用
+            // 尽早将对象放入缓存，以防循环引用
             addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
         }
 
@@ -1082,6 +1083,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     /**
+     * 创建Bean的实例对象
+     *
      * Create a new instance for the specified bean, using an appropriate instantiation strategy:
      * factory method, constructor autowiring, or simple instantiation.
      *
@@ -1094,7 +1097,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @see #autowireConstructor
      * @see #instantiateBean
      */
-    //创建Bean的实例对象
     protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
         // Make sure bean class is actually resolved at this point.
         //检查确认Bean是可实例化的
@@ -1141,6 +1143,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
         // Need to determine the constructor...
         //使用Bean的构造方法进行实例化
+        // 注意 spring 是无法解决构造器注入的循环依赖
         Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
         if (ctors != null ||
                 mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_CONSTRUCTOR ||
