@@ -243,8 +243,11 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
      */
     @Override
     protected void initApplicationContext() throws BeansException {
+        // 扩展拦截器，这是个模板方法 子类目前并没有实现
         extendInterceptors(this.interceptors);
+        // 处理拦截器
         detectMappedInterceptors(this.adaptedInterceptors);
+        // 初始化拦截器
         initInterceptors();
     }
 

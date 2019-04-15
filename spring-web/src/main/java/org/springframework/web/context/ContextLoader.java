@@ -283,11 +283,14 @@ public class ContextLoader {
             // Store context in local instance variable, to guarantee that
             // it is available on ServletContext shutdown.
             if (this.context == null) {
+                // 创建一个XmlWebApplicationContext对象
                 this.context = createWebApplicationContext(servletContext);
             }
             if (this.context instanceof ConfigurableWebApplicationContext) {
                 ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) this.context;
+                //判断状态是否是已启动，还记得上一篇中我们讲到，初始化前的准备操作就有把active设置为true
                 if (!cwac.isActive()) {
+                    // 设置父容器，父容器这里为NULL
                     // The context has not yet been refreshed -> provide services such as
                     // setting the parent context, setting the application context id, etc
                     if (cwac.getParent() == null) {
@@ -296,6 +299,7 @@ public class ContextLoader {
                         ApplicationContext parent = loadParentContext(servletContext);
                         cwac.setParent(parent);
                     }
+                    //真正完成spring ioc容器的初始化操作
                     configureAndRefreshWebApplicationContext(cwac, servletContext);
                 }
             }
@@ -394,7 +398,18 @@ public class ContextLoader {
             }
         }
 
+        //把ServletContext对象放到 spring 容器中
         wac.setServletContext(sc);
+        /*根据web.xml 中context-param的配置的路径加载资源
+          <context-param>
+               <param-name>contextConfigLocation</param-name>
+               <param-value>xxxxxxx</param-value>
+       </context-param>
+        默认配置的key为contextConfigLocation，
+        如果没有配置，默认路径为/WEB-INF/applicationContext.xml
+        这个是否也解答了一个spring mvc中常碰到的问题，如果没有配置这个context-param，
+        且在/WEB-INF/applicationContext.xml下并没有默认配置文件时，就会报文件加载异常的错误
+        */
         String configLocationParam = sc.getInitParameter(CONFIG_LOCATION_PARAM);
         if (configLocationParam != null) {
             wac.setConfigLocation(configLocationParam);
@@ -409,6 +424,7 @@ public class ContextLoader {
         }
 
         customizeContext(sc, wac);
+        // refresh
         wac.refresh();
     }
 

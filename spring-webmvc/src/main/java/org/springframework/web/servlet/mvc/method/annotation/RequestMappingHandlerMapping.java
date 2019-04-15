@@ -129,6 +129,8 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
      * 因为他是一个方法级的handler，而 AbstractController 一个类只代表一个入口
      *
      * @see AbstractAutowireCapableBeanFactory#initializeBean(String, Object, RootBeanDefinition)
+     * @see AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsBeforeInitialization(Object, String)
+     * @see ApplicationContextAwareProcessor#postProcessBeforeInitialization(Object, String)
      * @see AbstractAutowireCapableBeanFactory#invokeInitMethods(String, Object, RootBeanDefinition)
      * @see AbstractAutowireCapableBeanFactory#applyBeanPostProcessorsBeforeInitialization(Object, String)
      * @see ApplicationContextAwareProcessor#postProcessBeforeInitialization(Object, String)

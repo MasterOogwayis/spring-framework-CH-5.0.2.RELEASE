@@ -175,6 +175,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
     // Handler method detection
 
     /**
+     * 在初始化时检测处理程序方法
      * Detects handler methods at initialization.
      */
     @Override
@@ -183,6 +184,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
     }
 
     /**
+     * 扫描所有 bean ，找到可用的方法并注册
+     *
      * Scan beans in the ApplicationContext, detect and register handler methods.
      *
      * @see #isHandler(Class)
@@ -193,6 +196,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
         if (logger.isDebugEnabled()) {
             logger.debug("Looking for request mappings in application context: " + getApplicationContext());
         }
+        // 获取容器中所有 beanName
         String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
                 BeanFactoryUtils.beanNamesForTypeIncludingAncestors(obtainApplicationContext(), Object.class) :
                 obtainApplicationContext().getBeanNamesForType(Object.class));
@@ -201,6 +205,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
             if (!beanName.startsWith(SCOPED_TARGET_NAME_PREFIX)) {
                 Class<?> beanType = null;
                 try {
+                    // 获取 class 类型
                     beanType = obtainApplicationContext().getType(beanName);
                 } catch (Throwable ex) {
                     // An unresolvable bean type, probably from a lazy bean - let's ignore it.
@@ -209,24 +214,33 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
                     }
                 }
                 if (beanType != null && isHandler(beanType)) {
+                    // 如果是 handler 则查找方法
                     detectHandlerMethods(beanName);
                 }
             }
         }
+        // 这是个模板方法 还没有任何处理逻辑
         handlerMethodsInitialized(getHandlerMethods());
     }
 
     /**
+     * 在处理程序中查找处理程序方法
+     *
+     * 前面在 ApplicationContext 中获取了所有 beanName 并且拿到 Class 判断是不是 handler (被@Controller和@RequestMapping注解)
+     *
      * Look for handler methods in a handler.
      *
-     * @param handler the bean name of a handler or a handler instance
+     * @param handler the bean name of a handler or a handler instance.  简单易懂 beanName
      */
     protected void detectHandlerMethods(final Object handler) {
+        // 获取这个 handler (@Controller) 的class
         Class<?> handlerType = (handler instanceof String ?
                 obtainApplicationContext().getType((String) handler) : handler.getClass());
 
         if (handlerType != null) {
+            // 若它是 cglib 的代理类则返回代理的真实类
             final Class<?> userType = ClassUtils.getUserClass(handlerType);
+            // 解析所有被 @RequestMapping 注解的方法
             Map<Method, T> methods = MethodIntrospector.selectMethods(userType,
                     (MethodIntrospector.MetadataLookup<T>) method -> {
                         try {
@@ -241,7 +255,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
             }
             for (Map.Entry<Method, T> entry : methods.entrySet()) {
                 Method invocableMethod = AopUtils.selectInvocableMethod(entry.getKey(), userType);
+                // T RequestMappingInfo
                 T mapping = entry.getValue();
+                // 注册 handler method
                 registerHandlerMethod(handler, invocableMethod, mapping);
             }
         }
@@ -558,7 +574,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
                 String name = null;
                 if (getNamingStrategy() != null) {
+                    // 将类中的大写字母提取出来后面紧跟#号再加方法的名字
                     name = getNamingStrategy().getName(handlerMethod, mapping);
+                    // addMappingName就是把这个name为键,这个类和方法名放入到nameLookUp当中去
                     addMappingName(name, handlerMethod);
                 }
 

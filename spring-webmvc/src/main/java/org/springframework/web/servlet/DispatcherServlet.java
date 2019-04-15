@@ -641,6 +641,8 @@ public class DispatcherServlet extends FrameworkServlet {
     }
 
     /**
+     * handler 组件对象其实已经就在 spring 容器了,initHandlerMappings的作用只不过是将他们放到集合当中
+     *
      * Initialize the HandlerMappings used by this class.
      * <p>If no HandlerMapping beans are defined in the BeanFactory for this namespace,
      * we default to BeanNameUrlHandlerMapping.
@@ -669,7 +671,11 @@ public class DispatcherServlet extends FrameworkServlet {
 
         // Ensure we have at least one HandlerMapping, by registering
         // a default HandlerMapping if no other mappings are found.
+        // 如果没有找到其他映射，请确保我们至少有一个HandlerMapping，通过注册默认的HandlerMapping。
         if (this.handlerMappings == null) {
+            // 默认会加载 DispatcherServlet.properties 里面配置的 HandlerMapping
+            // 默认值有2个 HandlerMapping BeanNameUrlHandlerMapping 和 RequestMappingHandlerMapping
+            // 一个是通过实现 AbstractController 接口实现Handler，另一个是通过 @Controller和@RequestMapping注解
             this.handlerMappings = getDefaultStrategies(context, HandlerMapping.class);
             if (logger.isDebugEnabled()) {
                 logger.debug("No HandlerMappings found in servlet '" + getServletName() + "': using default");

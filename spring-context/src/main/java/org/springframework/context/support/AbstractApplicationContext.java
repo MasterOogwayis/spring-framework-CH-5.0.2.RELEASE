@@ -534,6 +534,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
     /**
      * SpringIOC 容器对Bean 配置资源的载入是从refresh()函数开始的
+     * @see ContextLoaderListener#contextInitialized
+     * @see ContextLoader#initWebApplicationContext
      *
      * @throws BeansException
      * @throws IllegalStateException
