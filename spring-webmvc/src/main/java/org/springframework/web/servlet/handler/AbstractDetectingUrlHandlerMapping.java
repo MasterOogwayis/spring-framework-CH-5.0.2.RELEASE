@@ -50,6 +50,8 @@ public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHand
 
 
     /**
+     * 初始化
+     *
      * Calls the {@link #detectHandlers()} method in addition to the
      * superclass's initialization.
      */

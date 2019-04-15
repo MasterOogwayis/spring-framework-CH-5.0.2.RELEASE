@@ -341,29 +341,35 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
             String handlerName = (String) handler;
             ApplicationContext applicationContext = obtainApplicationContext();
             if (applicationContext.isSingleton(handlerName)) {
+                // 根据 handler 的名字从容器中找到 bean
                 resolvedHandler = applicationContext.getBean(handlerName);
             }
         }
 
         Object mappedHandler = this.handlerMap.get(urlPath);
         if (mappedHandler != null) {
+            // 将根据名字取的和根据 url 取的进行对比,看是不是同一个,如果不是同一个则抛异常
             if (mappedHandler != resolvedHandler) {
                 throw new IllegalStateException(
                         "Cannot map " + getHandlerDescription(handler) + " to URL path [" + urlPath +
                                 "]: There is already " + getHandlerDescription(mappedHandler) + " mapped.");
             }
         } else {
+            // 还没注册
             if (urlPath.equals("/")) {
+                // 设为根 handler
                 if (logger.isInfoEnabled()) {
                     logger.info("Root mapping to " + getHandlerDescription(handler));
                 }
                 setRootHandler(resolvedHandler);
             } else if (urlPath.equals("/*")) {
+                // 设为默认 handler
                 if (logger.isInfoEnabled()) {
                     logger.info("Default mapping to " + getHandlerDescription(handler));
                 }
                 setDefaultHandler(resolvedHandler);
             } else {
+                // 注册关系
                 this.handlerMap.put(urlPath, resolvedHandler);
                 if (logger.isInfoEnabled()) {
                     logger.info("Mapped URL path [" + urlPath + "] onto " + getHandlerDescription(handler));

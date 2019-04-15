@@ -54,6 +54,9 @@ import java.util.Properties;
  */
 public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
+    /**
+     * url → Handler
+     */
     private final Map<String, Object> urlMap = new LinkedHashMap<>();
 
 
@@ -102,6 +105,7 @@ public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
     @Override
     public void initApplicationContext() throws BeansException {
         super.initApplicationContext();
+        // 注册，url 和 Controller 的关联在这里处理
         registerHandlers(this.urlMap);
     }
 
