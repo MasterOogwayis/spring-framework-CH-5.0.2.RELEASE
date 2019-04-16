@@ -130,6 +130,7 @@ public class AnnotationConfigUtils {
 
     /**
      * Register all relevant annotation post processors in the given registry.
+     * 在给定的注册表中注册所有相关的注释后处理器。
      *
      * @param registry the registry to operate on
      */
@@ -161,18 +162,20 @@ public class AnnotationConfigUtils {
 
         Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(4);
 
+        // 注册处理 @Configuration 的处理器
         if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
             def.setSource(source);
             beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
         }
 
+        // 注册一个为自动注入 bean 选择合适构造方法的 BeanPostProcesser
         if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
             def.setSource(source);
             beanDefs.add(registerPostProcessor(registry, def, AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME));
         }
-
+        // 注册一个验证 注入属性的 BeanPostProcesser，返回验证过后的属性值
         if (!registry.containsBeanDefinition(REQUIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(RequiredAnnotationBeanPostProcessor.class);
             def.setSource(source);
@@ -200,11 +203,15 @@ public class AnnotationConfigUtils {
             beanDefs.add(registerPostProcessor(registry, def, PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME));
         }
 
+        // 注册一个 @EventListener 初始化的监听器
+        // 每个被 @EventListener 注解的方法最终都会被定义成一个 ApplicationListener 然后注册到  applicationListeners
         if (!registry.containsBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
             def.setSource(source);
             beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_PROCESSOR_BEAN_NAME));
         }
+
+
         if (!registry.containsBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(DefaultEventListenerFactory.class);
             def.setSource(source);

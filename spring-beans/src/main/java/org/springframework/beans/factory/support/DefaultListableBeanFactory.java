@@ -714,7 +714,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
 
-    //对配置lazy-init属性单态Bean的预实例化
+    /**
+     * 对配置lazy-init属性单态Bean的预实例化
+     *
+     * @throws BeansException
+     */
     @Override
     public void preInstantiateSingletons() throws BeansException {
         if (this.logger.isDebugEnabled()) {
@@ -733,8 +737,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
                 //如果指定名称的bean是创建容器的Bean
                 if (isFactoryBean(beanName)) {
-                    //FACTORY_BEAN_PREFIX=”&”，当Bean名称前面加”&”符号
-                    //时，获取的是产生容器对象本身，而不是容器产生的Bean.
+                    //FACTORY_BEAN_PREFIX=”&”，当Bean名称前面加”&”符号时，获取的是产生容器对象本身，而不是容器产生的Bean.
                     //调用getBean方法，触发容器对Bean实例化和依赖注入过程
                     final FactoryBean<?> factory = (FactoryBean<?>) getBean(FACTORY_BEAN_PREFIX + beanName);
                     //标识是否需要预实例化

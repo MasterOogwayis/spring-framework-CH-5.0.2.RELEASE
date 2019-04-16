@@ -557,6 +557,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             if (beanInstance instanceof FactoryBean) {
                 if (!BeanFactoryUtils.isFactoryDereference(name)) {
                     Class<?> type = getTypeForFactoryBean((FactoryBean<?>) beanInstance);
+                    // 是不是 ResolvableType.isAssignableFrom 是不是这个类的子类，或他的实现
                     return (type != null && typeToMatch.isAssignableFrom(type));
                 } else {
                     return typeToMatch.isInstance(beanInstance);

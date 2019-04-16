@@ -19,6 +19,7 @@ package org.springframework.context.support;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.Aware;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.EmbeddedValueResolver;
 import org.springframework.context.*;
 import org.springframework.lang.Nullable;
@@ -50,6 +51,7 @@ import java.security.PrivilegedAction;
  * @see org.springframework.context.MessageSourceAware
  * @see org.springframework.context.ApplicationContextAware
  * @see org.springframework.context.support.AbstractApplicationContext#refresh()
+ * @see org.springframework.context.support.AbstractApplicationContext#prepareBeanFactory(ConfigurableListableBeanFactory)
  * @since 10.10.2003
  */
 class ApplicationContextAwareProcessor implements BeanPostProcessor {

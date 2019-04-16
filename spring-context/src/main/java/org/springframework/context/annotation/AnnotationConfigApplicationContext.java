@@ -17,6 +17,7 @@
 package org.springframework.context.annotation;
 
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.GenericApplicationContext;
@@ -73,6 +74,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
      * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
      */
     public AnnotationConfigApplicationContext() {
+        // 初始化 reader 的时候定义了很多 BeanFactoryPostProcessor 通知器
+        // 为内部beanFactory容器初始化了一个id为
+        // org.springframework.context.annotation.internalConfigurationAnnotationProcessor的组件，
+        // 这是一个ConfigurationClassPostProcessor组件，用来处理添加@Configuration注解的类，并将Bean定义注册到BeanFactory中。
+        /** @see super#invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory) 中执行 */
         this.reader = new AnnotatedBeanDefinitionReader(this);
         this.scanner = new ClassPathBeanDefinitionScanner(this);
     }
