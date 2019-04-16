@@ -1,11 +1,11 @@
 /*
 pluginManagement {
-	repositories {
-		maven {
-			url "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
-		}
-		gradlePluginPortal()
-	}
+    repositories {
+        maven {
+            url "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
+        }
+        gradlePluginPortal()
+    }
 }
 */
 
@@ -34,11 +34,11 @@ include "spring-framework-bom"
 
 // Exposes gradle buildSrc for IDE support
 include "buildSrc"
-rootProject.children.find{ it.name == "buildSrc" }.name = "spring-build-src"
+rootProject.children.find { it.name == "buildSrc" }.name = "spring-build-src"
 
 rootProject.name = 'spring'
-rootProject.children.each {project ->
-	project.buildFileName = "${project.name}.gradle"
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
 }
 include 'tests'
 

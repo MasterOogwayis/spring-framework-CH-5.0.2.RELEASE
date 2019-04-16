@@ -27,6 +27,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.event.DefaultEventListenerFactory;
 import org.springframework.context.event.EventListenerMethodProcessor;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
@@ -150,7 +151,9 @@ public class AnnotationConfigUtils {
     public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
             BeanDefinitionRegistry registry, @Nullable Object source) {
 
+        // 拿到 BeanFactory
         DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
+        // 设置默认排序规则器
         if (beanFactory != null) {
             if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
                 beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
@@ -160,6 +163,7 @@ public class AnnotationConfigUtils {
             }
         }
 
+        // 保存要注册的 BeanPostProcesser
         Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(4);
 
         // 注册处理 @Configuration 的处理器
@@ -169,7 +173,10 @@ public class AnnotationConfigUtils {
             beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
         }
 
-        // 注册一个为自动注入 bean 选择合适构造方法的 BeanPostProcesser
+        // 注册一个为自动注入 BeanPostProcesser
+        // 用作初始化时 处理需要属性注入的属性，查找构造器注入合适的构造器
+        /** @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBeanInstance(String, RootBeanDefinition, Object[]) */
+        /** @see org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#determineConstructorsFromBeanPostProcessors(Class, String)*/
         if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
             def.setSource(source);
@@ -204,7 +211,8 @@ public class AnnotationConfigUtils {
         }
 
         // 注册一个 @EventListener 初始化的监听器
-        // 每个被 @EventListener 注解的方法最终都会被定义成一个 ApplicationListener 然后注册到  applicationListeners
+        // 每个被 @EventListener 注解的方法最终都会被解析定义成一个 ApplicationListener 然后注册到  applicationListeners
+        /** @see AbstractApplicationContext#finishRefresh() 触发 */
         if (!registry.containsBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME)) {
             RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
             def.setSource(source);

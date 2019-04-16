@@ -108,9 +108,9 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
      * @see #setResourceLoader
      * @see #setEnvironment
      */
-    //为容器创建一个类路径Bean定义扫描器，并指定是否使用默认的扫描过滤规则。
-    //即Spring默认扫描配置：@Component、@Repository、@Service、@Controller
-    //注解的Bean，同时也支持JavaEE6的@ManagedBean和JSR-330的@Named注解
+    // 为容器创建一个类路径Bean定义扫描器，并指定是否使用默认的扫描过滤规则。
+    // 即Spring默认扫描配置：@Component、@Repository、@Service、@Controller
+    // 注解的Bean，同时也支持JavaEE6的@ManagedBean和JSR-330的@Named注解
     public ClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry, boolean useDefaultFilters) {
         this(registry, useDefaultFilters, getOrCreateEnvironment(registry));
     }

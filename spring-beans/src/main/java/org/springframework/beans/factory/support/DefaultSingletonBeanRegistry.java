@@ -67,7 +67,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
     protected final Log logger = LogFactory.getLog(getClass());
 
     /**
-     * 1. 一级缓存：已经创建好的 单例 bean
+     * 1. ioc 单例容器
      *
      * Cache of singleton objects: bean name --> bean instance
      */

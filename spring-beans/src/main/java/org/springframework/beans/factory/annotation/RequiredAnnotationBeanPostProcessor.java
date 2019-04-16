@@ -155,9 +155,9 @@ public class RequiredAnnotationBeanPostProcessor extends InstantiationAwareBeanP
     public PropertyValues postProcessPropertyValues(
             PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
 
-        //如果容器缓存中没有指定Bean名称
+        // 如果容器缓存中没有指定Bean名称
         if (!this.validatedBeanNames.contains(beanName)) {
-            //如果指定Bean定义中没有设置skipRequiredCheck属性
+            // 如果指定Bean定义中没有设置skipRequiredCheck属性
             if (!shouldSkip(this.beanFactory, beanName)) {
                 List<String> invalidProperties = new ArrayList<>();
                 //遍历所有属性

@@ -1119,7 +1119,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
 
         // Shortcut when re-creating the same bean...
-        //使用容器的自动装配方法进行实例化
+        // 使用容器的自动装配方法进行实例化
         boolean resolved = false;
         boolean autowireNecessary = false;
         if (args == null) {

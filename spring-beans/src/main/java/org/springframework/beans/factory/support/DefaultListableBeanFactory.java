@@ -39,6 +39,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 这才是我们默认的 IOC 容器工厂，其他诸如 ApplicationContext 什么的几乎都是靠持有这个对象来干活
+ * 持有也有个好处，分层以后有各自独立的命名域
+ *
  * Default implementation of the
  * {@link org.springframework.beans.factory.ListableBeanFactory} and
  * {@link BeanDefinitionRegistry} interfaces: a full-fledged bean factory

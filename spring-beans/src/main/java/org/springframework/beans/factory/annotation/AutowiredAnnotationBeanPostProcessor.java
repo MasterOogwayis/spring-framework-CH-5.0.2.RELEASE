@@ -371,7 +371,16 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
         return (candidateConstructors.length > 0 ? candidateConstructors : null);
     }
 
-    //处理类中的属性
+    /**
+     * 处理类中的属性
+     *
+     * @param pvs
+     * @param pds
+     * @param bean
+     * @param beanName
+     * @return
+     * @throws BeanCreationException
+     */
     @Override
     public PropertyValues postProcessPropertyValues(
             PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeanCreationException {
@@ -390,13 +399,14 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
     }
 
     /**
+     * 处理对象的注入
+     *
      * 'Native' processing method for direct calls with an arbitrary target instance,
      * resolving all of its fields and methods which are annotated with {@code @Autowired}.
      *
      * @param bean the target instance to process
      * @throws BeanCreationException if autowiring failed
      */
-    //处理对象的注入
     public void processInjection(Object bean) throws BeanCreationException {
         //获取给定Bean的Class对象
         Class<?> clazz = bean.getClass();
@@ -414,7 +424,14 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
     }
 
 
-    //获取给定类的autowire相关注解元信息
+    /**
+     * 获取给定类的autowire相关注解元信息
+     *
+     * @param beanName
+     * @param clazz
+     * @param pvs
+     * @return
+     */
     private InjectionMetadata findAutowiringMetadata(String beanName, Class<?> clazz, @Nullable PropertyValues pvs) {
         // Fall back to class name as cache key, for backwards compatibility with custom callers.
         String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
