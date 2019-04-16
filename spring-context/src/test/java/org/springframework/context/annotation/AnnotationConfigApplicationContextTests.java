@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation6.ComponentForScanning;
 import org.springframework.context.annotation6.ConfigForScanning;
 import org.springframework.context.annotation6.Jsr330NamedForScanning;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import static java.lang.String.format;
@@ -359,6 +360,7 @@ public class AnnotationConfigApplicationContextTests {
     @Component
     static class CustomListener {
 
+        @EventListener
         public void eventActive(Object object) {
             System.out.println(object);
         }

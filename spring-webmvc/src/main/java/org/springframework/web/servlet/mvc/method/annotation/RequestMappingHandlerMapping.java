@@ -19,7 +19,6 @@ package org.springframework.web.servlet.mvc.method.annotation;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.EmbeddedValueResolverAware;
-import org.springframework.context.support.ApplicationContextAwareProcessor;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
