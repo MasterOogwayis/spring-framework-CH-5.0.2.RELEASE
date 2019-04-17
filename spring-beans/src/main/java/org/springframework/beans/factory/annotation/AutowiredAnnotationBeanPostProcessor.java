@@ -385,10 +385,10 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
     public PropertyValues postProcessPropertyValues(
             PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeanCreationException {
 
-        //获取指定类中autowire相关注解的元信息
+        // 获取指定类中autowire相关注解的元信息
         InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
         try {
-            //对Bean的属性进行自动注入
+            // 对Bean的属性进行自动注入
             metadata.inject(bean, beanName, pvs);
         } catch (BeanCreationException ex) {
             throw ex;
@@ -456,7 +456,12 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
         return metadata;
     }
 
-    //解析给定类autowire相关注解元信息
+    /**
+     * 解析给定类autowire相关注解元信息
+     *
+     * @param clazz
+     * @return
+     */
     private InjectionMetadata buildAutowiringMetadata(final Class<?> clazz) {
         //创建一个存放注解元信息的集合
         LinkedList<InjectionMetadata.InjectedElement> elements = new LinkedList<>();
@@ -467,7 +472,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
             //创建一个存储当前正在处理类注解元信息的集合
             final LinkedList<InjectionMetadata.InjectedElement> currElements = new LinkedList<>();
 
-            //利用JDK反射机制获取给定类中所有的声明字段，获取字段上的注解信息
+            //利用JDK反射机制获取给定类中所有的声明字段，获取字段上的注解信息 主要是 @Autowired
             ReflectionUtils.doWithLocalFields(targetClass, field -> {
                 //获取给定字段上的注解
                 AnnotationAttributes ann = findAutowiredAnnotation(field);
@@ -623,10 +628,18 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
             this.required = required;
         }
 
-        //对字段进行注入
+        /**
+         * 对字段进行注入
+         * 注意这个类 实现了 BeanFactoryAware 当然自己能拿到 BeanFactory
+         *
+         * @param bean
+         * @param beanName
+         * @param pvs
+         * @throws Throwable
+         */
         @Override
         protected void inject(Object bean, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
-            //获取注入元素对象
+            // 获取注入元素对象
             Field field = (Field) this.member;
             Object value;
             //如果当前对象在容器中被缓存
@@ -634,14 +647,14 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
                 //根据Bean名称解析缓存中的字段值
                 value = resolvedCachedArgument(beanName, this.cachedFieldValue);
             }
-            //如果当前对象没有被容器缓存
+            // 如果当前对象没有被容器缓存
             else {
-                //创建一个字段依赖描述符
+                // 创建一个字段依赖描述符
                 DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
                 desc.setContainingClass(bean.getClass());
                 Set<String> autowiredBeanNames = new LinkedHashSet<>(1);
                 Assert.state(beanFactory != null, "No BeanFactory available");
-                //获取容器中的类型转换器
+                // 获取容器中的类型转换器
                 TypeConverter typeConverter = beanFactory.getTypeConverter();
                 try {
                     //根据容器中Bean定义，解析指定的依赖关系，获取依赖对象
@@ -653,16 +666,16 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
                 synchronized (this) {
                     //如果当前对象没有被容器缓存
                     if (!this.cached) {
-                        //获取到了当前对象的依赖对象，并且required属性为true
+                        // 获取到了当前对象的依赖对象，并且 required 属性为true
                         if (value != null || this.required) {
                             this.cachedFieldValue = desc;
                             //为指定Bean注册依赖Bean
                             registerDependentBeans(beanName, autowiredBeanNames);
                             if (autowiredBeanNames.size() == 1) {
                                 String autowiredBeanName = autowiredBeanNames.iterator().next();
-                                //如果容器中有指定名称的Bean对象
+                                // 如果容器中有指定名称的Bean对象
                                 if (beanFactory.containsBean(autowiredBeanName)) {
-                                    //依赖对象类型和字段类型匹配，默认按类型注入
+                                    // 依赖对象类型和字段类型匹配，默认按类型注入
                                     if (beanFactory.isTypeMatch(autowiredBeanName, field.getType())) {
                                         //创建一个依赖对象的引用，同时缓存
                                         this.cachedFieldValue = new ShortcutDependencyDescriptor(

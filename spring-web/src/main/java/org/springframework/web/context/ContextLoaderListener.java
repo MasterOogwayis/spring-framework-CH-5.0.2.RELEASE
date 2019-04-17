@@ -98,6 +98,8 @@ public class ContextLoaderListener extends ContextLoader implements ServletConte
 
 
     /**
+     * Spring 由此启动
+     *
      * Initialize the root web application context.
      */
     @Override

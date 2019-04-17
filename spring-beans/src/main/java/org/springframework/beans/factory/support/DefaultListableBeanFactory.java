@@ -717,7 +717,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
 
-    /**
+    /*
      * 对配置lazy-init属性单态Bean的预实例化
      *
      * @throws BeansException
@@ -736,7 +736,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         for (String beanName : beanNames) {
             //获取指定名称的Bean定义
             RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
-            //Bean不是抽象的，是单态模式的，且lazy-init属性配置为false
+            //Bean不是抽象的，是单例模式的，且lazy-init属性配置为false
             if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
                 //如果指定名称的bean是创建容器的Bean
                 if (isFactoryBean(beanName)) {
@@ -1133,6 +1133,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
                 autowiredBeanNames.add(autowiredBeanName);
             }
             if (instanceCandidate instanceof Class) {
+                // 将 beanName 和 对应的 class 转换成 实例
                 instanceCandidate = descriptor.resolveCandidate(autowiredBeanName, type, this);
             }
             Object result = instanceCandidate;
