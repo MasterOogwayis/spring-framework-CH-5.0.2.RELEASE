@@ -38,6 +38,10 @@ import java.util.*;
  */
 class PostProcessorRegistrationDelegate {
 
+    /**
+     * @param beanFactory
+     * @param beanFactoryPostProcessors
+     */
     public static void invokeBeanFactoryPostProcessors(
             ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
@@ -71,12 +75,14 @@ class PostProcessorRegistrationDelegate {
                     beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
             for (String ppName : postProcessorNames) {
                 if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+                    // 默认是 ConfigurationClassPostProcessor
                     currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
                     processedBeans.add(ppName);
                 }
             }
             sortPostProcessors(currentRegistryProcessors, beanFactory);
             registryProcessors.addAll(currentRegistryProcessors);
+            // @Bean 解析入口 ConfigurationClassPostProcessor
             invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
             currentRegistryProcessors.clear();
 

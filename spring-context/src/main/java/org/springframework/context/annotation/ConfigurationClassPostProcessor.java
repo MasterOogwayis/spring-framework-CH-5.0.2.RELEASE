@@ -206,6 +206,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 
     /**
+     * 从已注册的 配置信息 进一步解析定义的 bean， 比如有方法注解 @Bean
+     *
      * Derive further bean definitions from the configuration classes in the registry.
      */
     @Override
