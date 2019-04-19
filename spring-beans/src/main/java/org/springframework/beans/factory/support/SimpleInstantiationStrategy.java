@@ -78,7 +78,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
                 constructorToUse = (Constructor<?>) bd.resolvedConstructorOrFactoryMethod;
                 //如果没有构造方法且没有工厂方法
                 if (constructorToUse == null) {
-                    //使用JDK的反射机制，判断要实例化的Bean是否是接口
+                    // 使用JDK的反射机制，判断要实例化的Bean是否是接口
                     final Class<?> clazz = bd.getBeanClass();
                     if (clazz.isInterface()) {
                         throw new BeanInstantiationException(clazz, "Specified class is an interface");

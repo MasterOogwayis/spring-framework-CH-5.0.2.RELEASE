@@ -26,6 +26,7 @@ import org.springframework.context.annotation6.ComponentForScanning;
 import org.springframework.context.annotation6.ConfigForScanning;
 import org.springframework.context.annotation6.Jsr330NamedForScanning;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -67,8 +68,10 @@ public class AnnotationConfigApplicationContextTests {
     @Test
     public void registerAndRefresh() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        context.register(Config.class, NameConfig.class, CustomListener.class);
+        context.register(Config.class, NameConfig.class, CustomBean.class);
         context.refresh();
+
+        CustomBean bean = context.getBean(CustomBean.class);
 
         context.getBean("testBean");
         context.getBean("name");
@@ -355,11 +358,14 @@ public class AnnotationConfigApplicationContextTests {
         }
     }
 
-    @Configuration
-    static class CustomListener {
+    @Component
+    static class CustomBean {
 
-        @EventListener
+        @Autowired
+        private TestBean testBean;
+
         public void eventActive(Object object) {
+            System.err.println(testBean.name);
             System.out.println(object);
         }
 
