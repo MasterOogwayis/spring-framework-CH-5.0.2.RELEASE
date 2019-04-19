@@ -552,6 +552,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         synchronized (mbd.postProcessingLock) {
             if (!mbd.postProcessed) {
                 try {
+                    // 这里有个 AutowiredAnnotationBeanPostProcessor 解析了 @Autowired @Resource 注解 并且放到mbd里面
                     applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
                 } catch (Throwable ex) {
                     throw new BeanCreationException(mbd.getResourceDescription(), beanName,
@@ -1344,10 +1345,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         if (!continueWithPropertyPopulation) {
             return;
         }
-        //获取容器在解析Bean定义资源时为BeanDefiniton中设置的属性值
+        // 获取容器在解析Bean定义资源时为BeanDefiniton中设置的属性值
         PropertyValues pvs = (mbd.hasPropertyValues() ? mbd.getPropertyValues() : null);
 
-        //对依赖注入处理，首先处理autowiring自动装配的依赖注入
+        // 对依赖注入处理，首先处理autowiring自动装配的依赖注入
         if (mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_NAME ||
                 mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_BY_TYPE) {
             MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
@@ -1380,6 +1381,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             if (hasInstAwareBpps) {
                 for (BeanPostProcessor bp : getBeanPostProcessors()) {
                     if (bp instanceof InstantiationAwareBeanPostProcessor) {
+                        // @Autowired 真正属性注入是在这里面处理的 AutowiredAnnotationBeanPostProcessor
                         InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
                         pvs = ibp.postProcessPropertyValues(pvs, filteredPds, bw.getWrappedInstance(), beanName);
                         if (pvs == null) {
