@@ -78,6 +78,10 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
 
 
     /**
+     * 解析 XML 配置文件
+     *
+     * 主要是我们的 配置在 web.xml 里面的 contextConfigLocation -> classpath:app-context-base.xml
+     *
      * Loads the bean definitions via an XmlBeanDefinitionReader.
      *
      * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
@@ -98,6 +102,7 @@ public class XmlWebApplicationContext extends AbstractRefreshableWebApplicationC
         // Allow a subclass to provide custom initialization of the reader,
         // then proceed with actually loading the bean definitions.
         initBeanDefinitionReader(beanDefinitionReader);
+        // 加载配置
         loadBeanDefinitions(beanDefinitionReader);
     }
 

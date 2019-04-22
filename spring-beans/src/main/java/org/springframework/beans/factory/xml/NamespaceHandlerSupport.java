@@ -69,6 +69,9 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
     @Override
     @Nullable
     public BeanDefinition parse(Element element, ParserContext parserContext) {
+        // <context:component-scan base-package="com"/> -> ComponentScanBeanDefinitionParser
+        // <mvc:annotation-driven/> -> AnnotationDrivenBeanDefinitionParser ->RequestMappingHandlerMapping
+        // <mvc:default-servlet-handler/> -> DefaultServletHandlerBeanDefinitionParser -> SimpleUrlHandlerMapping,BeanNameUrlHandlerMapping
         BeanDefinitionParser parser = findParserForElement(element, parserContext);
         return (parser != null ? parser.parse(element, parserContext) : null);
     }

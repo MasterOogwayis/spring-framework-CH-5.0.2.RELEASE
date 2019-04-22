@@ -309,9 +309,9 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
                 if (candidate instanceof AbstractBeanDefinition) {
                     postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
                 }
-                //如果扫描到的Bean是Spring的注解Bean，则处理其通用的Spring注解
+                // 如果扫描到的Bean是Spring的注解Bean，则处理其通用的Spring注解
                 if (candidate instanceof AnnotatedBeanDefinition) {
-                    //处理注解Bean中通用的注解，在分析注解Bean定义类读取器时已经分析过
+                    // 处理注解Bean中通用的注解，在分析注解Bean定义类读取器时已经分析过
                     AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
                 }
                 //根据Bean名称检查指定的Bean是否需要在容器中注册，或者在容器中冲突

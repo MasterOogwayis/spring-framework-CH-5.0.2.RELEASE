@@ -185,6 +185,14 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
             ClassUtils.isPresent("com.google.gson.Gson", AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 
+    /**
+     * <mvc:annotation-driven/> 开启组件扫描后  使用它来初始化必要处理器
+     *
+     * @param element       the element that is to be parsed into one or more {@link BeanDefinition BeanDefinitions}
+     * @param parserContext the object encapsulating the current state of the parsing process;
+     *                      provides access to a {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}
+     * @return
+     */
     @Override
     @Nullable
     public BeanDefinition parse(Element element, ParserContext parserContext) {

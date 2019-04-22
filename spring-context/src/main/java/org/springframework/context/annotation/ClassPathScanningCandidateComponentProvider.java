@@ -425,6 +425,13 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
         return candidates;
     }
 
+
+    /**
+     * 扫描包路径下的 class
+     *
+     * @param basePackage
+     * @return
+     */
     private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
         Set<BeanDefinition> candidates = new LinkedHashSet<>();
         try {
@@ -441,6 +448,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
                 if (resource.isReadable()) {
                     try {
                         MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
+                        // 是否能成为候选组件  被 @Component @ManagedBean 注解
                         if (isCandidateComponent(metadataReader)) {
                             ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
                             sbd.setResource(resource);

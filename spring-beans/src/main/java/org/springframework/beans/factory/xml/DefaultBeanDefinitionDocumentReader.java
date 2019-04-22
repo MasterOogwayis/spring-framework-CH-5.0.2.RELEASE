@@ -170,12 +170,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
     }
 
     /**
+     * 使用Spring的Bean规则从Document的根元素开始进行Bean定义的Document对象
+     *
      * Parse the elements at the root level in the document:
      * "import", "alias", "bean".
      *
      * @param root the DOM root element of the document
      */
-    //使用Spring的Bean规则从Document的根元素开始进行Bean定义的Document对象
     protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
         //Bean定义的Document对象使用了Spring默认的XML命名空间
         if (delegate.isDefaultNamespace(root)) {
@@ -183,15 +184,19 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
             NodeList nl = root.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
                 Node node = nl.item(i);
-                //获得Document节点是XML元素节点
+                //获得Document节点是XML元素节点, 特别注意 <context:component-scan base-package="com"/>
                 if (node instanceof Element) {
                     Element ele = (Element) node;
                     //Bean定义的Document的元素节点使用的是Spring默认的XML命名空间
+                    // <bean></bean>
                     if (delegate.isDefaultNamespace(ele)) {
                         //使用Spring的Bean规则解析元素节点
                         parseDefaultElement(ele, delegate);
                     } else {
                         //没有使用Spring默认的XML命名空间，则使用用户自定义的解//析规则解析元素节点
+                        // 主要是开启 功能注解 比如
+                        // <context:component-scan base-package="com"/> 扫描包路径
+                        // <mvc:annotation-driven/> 开启组件扫描
                         delegate.parseCustomElement(ele);
                     }
                 }
