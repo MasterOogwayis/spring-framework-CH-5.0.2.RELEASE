@@ -191,7 +191,14 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
         return counter;
     }
 
-    //重载方法，调用下面的loadBeanDefinitions(String, Set<Resource>);方法
+    /**
+     * 重载方法，调用下面的loadBeanDefinitions(String, Set<Resource>);方法
+     *
+     * @param location the resource location, to be loaded with the ResourceLoader
+     *                 (or ResourcePatternResolver) of this bean definition reader
+     * @return
+     * @throws BeanDefinitionStoreException
+     */
     @Override
     public int loadBeanDefinitions(String location) throws BeanDefinitionStoreException {
         return loadBeanDefinitions(location, null);
