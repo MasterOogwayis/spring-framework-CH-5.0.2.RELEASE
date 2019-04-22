@@ -214,7 +214,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
                     }
                 }
                 if (beanType != null && isHandler(beanType)) {
-                    // 如果是 handler 则查找方法
+                    // 如果是 handler 则查找方法，被 @Controller 或 @RequestMapping 注解
                     detectHandlerMethods(beanName);
                 }
             }
@@ -556,6 +556,11 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
             this.readWriteLock.readLock().unlock();
         }
 
+        /**
+         * @param mapping
+         * @param handler
+         * @param method
+         */
         public void register(T mapping, Object handler, Method method) {
             this.readWriteLock.writeLock().lock();
             try {

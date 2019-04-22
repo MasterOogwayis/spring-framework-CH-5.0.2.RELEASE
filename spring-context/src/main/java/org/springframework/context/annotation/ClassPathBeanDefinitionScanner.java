@@ -278,6 +278,8 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
     }
 
     /**
+     * 类路径Bean定义扫描器扫描给定包及其子包
+     *
      * Perform a scan within the specified base packages,
      * returning the registered bean definitions.
      * <p>This method does <i>not</i> register an annotation config processor
@@ -286,15 +288,14 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
      * @param basePackages the packages to check for annotated classes
      * @return set of beans registered if any for tooling registration purposes (never {@code null})
      */
-    //类路径Bean定义扫描器扫描给定包及其子包
     protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Assert.notEmpty(basePackages, "At least one base package must be specified");
-        //创建一个集合，存放扫描到Bean定义的封装类
+        // 创建一个集合，存放扫描到Bean定义的封装类
         Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
-        //遍历扫描所有给定的包
+        // 遍历扫描所有给定的包
         for (String basePackage : basePackages) {
-            //调用父类ClassPathScanningCandidateComponentProvider的方法
-            //扫描给定类路径，获取符合条件的Bean定义
+            // 调用父类ClassPathScanningCandidateComponentProvider的方法
+            // 扫描给定类路径，获取符合条件的 class 然后转化成 BeanDefinition 定义
             Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
             //遍历扫描到的Bean
             for (BeanDefinition candidate : candidates) {

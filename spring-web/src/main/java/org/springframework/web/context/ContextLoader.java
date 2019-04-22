@@ -283,14 +283,15 @@ public class ContextLoader {
             // Store context in local instance variable, to guarantee that
             // it is available on ServletContext shutdown.
             if (this.context == null) {
-                // 创建一个XmlWebApplicationContext对象
+                // web.xml 默认 XmlWebApplicationContext
                 this.context = createWebApplicationContext(servletContext);
             }
             if (this.context instanceof ConfigurableWebApplicationContext) {
                 ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) this.context;
-                //判断状态是否是已启动，还记得上一篇中我们讲到，初始化前的准备操作就有把active设置为true
+                // 判断状态是否是已启动，初始化前的准备操作就有把active设置为true
+                // AbstractApplicationContext#prepareRefresh() 里面将active设置为true
                 if (!cwac.isActive()) {
-                    // 设置父容器，父容器这里为NULL
+                    // 设置父容器，父容器这里为 NULL
                     // The context has not yet been refreshed -> provide services such as
                     // setting the parent context, setting the application context id, etc
                     if (cwac.getParent() == null) {

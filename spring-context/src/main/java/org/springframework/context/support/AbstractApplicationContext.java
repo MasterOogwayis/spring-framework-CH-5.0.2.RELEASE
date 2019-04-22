@@ -457,7 +457,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
     /**
      * 获取一个Spring Source的加载器用于读入Spring Bean定义资源文件
-     *
+     * <p>
      * Return the ResourcePatternResolver to use for resolving location patterns
      * into Resource instances. Default is a
      * {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver},
@@ -537,14 +537,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
     /**
      * 通过在refresh()方法中执行 ConfigurationClassPostProcessor 后置处理器完成对bean的加载.
-     * @see ConfigurationClassPostProcessor#postProcessBeanDefinitionRegistry(BeanDefinitionRegistry)
-     *
-     * SpringIOC 容器对Bean 配置资源的载入是从refresh()函数开始的
-     * @see ContextLoaderListener#contextInitialized
-     * @see ContextLoader#initWebApplicationContext
      *
      * @throws BeansException
      * @throws IllegalStateException
+     * @see ConfigurationClassPostProcessor#postProcessBeanDefinitionRegistry(BeanDefinitionRegistry)
+     * <p>
+     * SpringIOC 容器对Bean 配置资源的载入是从refresh()函数开始的
+     * @see ContextLoaderListener#contextInitialized
+     * @see ContextLoader#initWebApplicationContext
      */
     @Override
     public void refresh() throws BeansException, IllegalStateException {
@@ -555,8 +555,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
             prepareRefresh();
 
             // Tell the subclass to refresh the internal bean factory.
-            // 告诉子类启动refreshBeanFactory()方法，Bean定义资源文件的载入从
-            // 子类的refreshBeanFactory()方法启动
+            // 告诉子类启动refreshBeanFactory()方法，Bean定义资源文件的载入从子类的refreshBeanFactory()方法启动
             // 2. 获取刷新后的内部 beanFactory
             ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -577,6 +576,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
                 // Register bean processors that intercept bean creation.
                 // 6. 注册BeanPostProcessor（Bean的后置处理器）,用于拦截bean创建过程
+                // 前面只是将定义的 BeanPostProcessor 定义到容器，这里从容器中取出来直接给 beanFactory 持有 beanPostProcessors
                 registerBeanPostProcessors(beanFactory);
 
                 // Initialize message source for this context.
@@ -901,7 +901,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
     /**
      * 对配置了lazy-init属性的Bean进行预实例化处理
-     *
+     * <p>
      * Finish the initialization of this context's bean factory,
      * initializing all remaining singleton beans.
      */

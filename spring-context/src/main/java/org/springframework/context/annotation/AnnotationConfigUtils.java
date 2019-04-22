@@ -140,6 +140,7 @@ public class AnnotationConfigUtils {
     }
 
     /**
+     *  注册所有的注解处理器
      * Register all relevant annotation post processors in the given registry.
      *
      * @param registry the registry to operate on

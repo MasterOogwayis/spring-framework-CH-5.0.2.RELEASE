@@ -289,13 +289,14 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
     /**
+     * XmlBeanDefinitionReader加载资源的入口方法
+     *
      * Load bean definitions from the specified XML file.
      *
      * @param resource the resource descriptor for the XML file
      * @return the number of bean definitions found
      * @throws BeanDefinitionStoreException in case of loading or parsing errors
      */
-    //XmlBeanDefinitionReader加载资源的入口方法
     @Override
     public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
         //将读入的XML资源进行特殊编码处理
