@@ -107,8 +107,11 @@ abstract class ConfigurationClassUtils {
         }
 
         if (isFullConfigurationCandidate(metadata)) {
+            // 被 @Configuration 注解的 bean
             beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
         } else if (isLiteConfigurationCandidate(metadata)) {
+            // @Component @ComponentScan @Import @ImportResource
+            // 或者 有 @Bean 注解的 method
             beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
         } else {
             return false;

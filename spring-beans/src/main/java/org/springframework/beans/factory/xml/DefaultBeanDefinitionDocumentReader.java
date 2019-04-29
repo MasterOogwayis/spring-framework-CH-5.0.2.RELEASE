@@ -230,10 +230,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
     }
 
     /**
+     * 解析<Import>导入元素，从给定的导入路径加载Bean定义资源到Spring IoC容器中
+     *
      * Parse an "import" element and load the bean definitions
      * from the given resource into the bean factory.
      */
-    //解析<Import>导入元素，从给定的导入路径加载Bean定义资源到Spring IoC容器中
     protected void importBeanDefinitionResource(Element ele) {
         //获取给定的导入元素的location属性
         String location = ele.getAttribute(RESOURCE_ATTRIBUTE);

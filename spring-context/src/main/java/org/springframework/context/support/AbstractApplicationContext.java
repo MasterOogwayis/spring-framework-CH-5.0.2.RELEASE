@@ -572,7 +572,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
                 // Invoke factory processors registered as beans in the context.
                 // 调用所有注册的 BeanFactoryPostProcessor 的Bean
-                // 5. 执行BeanFactoryPostProcessor的方法，BeanFactory的后置处理器，在BeanFactory标准初始化之后执行的
+                // 5. 执行BeanFactoryPostProcessor的方法，BeanFactory的后置处理器，在 BeanFactory 标准初始化之后执行的
                 // @Bean 注解方法在这里解析
                 invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -909,7 +909,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
      */
     protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
         // Initialize conversion service for this context.
-        // 这是Spring3以后新加的代码，为容器指定一个转换服务(ConversionService)
+        // 这是 Spring3 以后新加的代码，为容器指定一个转换服务(ConversionService)
         // 在对某些Bean属性进行转换时使用
         if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
                 beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {

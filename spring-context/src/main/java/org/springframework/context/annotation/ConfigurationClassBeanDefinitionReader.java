@@ -127,6 +127,7 @@ class ConfigurationClassBeanDefinitionReader {
             registerBeanDefinitionForImportedConfigurationClass(configClass);
         }
         for (BeanMethod beanMethod : configClass.getBeanMethods()) {
+            // 从 @Bean 注解的方法解析 bean
             loadBeanDefinitionsForBeanMethod(beanMethod);
         }
         loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
@@ -211,6 +212,7 @@ class ConfigurationClassBeanDefinitionReader {
         beanDef.setAutowireMode(RootBeanDefinition.AUTOWIRE_CONSTRUCTOR);
         beanDef.setAttribute(RequiredAnnotationBeanPostProcessor.SKIP_REQUIRED_CHECK_ATTRIBUTE, Boolean.TRUE);
 
+        // 处理基础配置
         AnnotationConfigUtils.processCommonDefinitionAnnotations(beanDef, metadata);
 
         Autowire autowire = bean.getEnum("autowire");
