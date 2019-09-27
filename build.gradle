@@ -86,6 +86,9 @@ configure(allprojects) { project ->
     configurations.all {
         // Check for updates every build
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        resolutionStrategy {
+            force 'xml-apis:xml-apis:1.4.01'
+        }
     }
 
     def commonCompilerArgs =
@@ -311,3 +314,16 @@ def qualifyVersionIfNecessary(version) {
 tasks.withType(JavaCompile){
     options.encoding = "UTF-8"
 }
+tasks.withType(GroovyCompile) {
+    groovyOptions.encoding = "UTF-8"
+}
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/8/docs/api"
+    }
+}
+

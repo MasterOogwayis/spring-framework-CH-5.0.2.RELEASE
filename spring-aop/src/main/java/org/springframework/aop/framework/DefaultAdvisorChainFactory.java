@@ -62,7 +62,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
         Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
         //查看是否包含IntroductionAdvisor
         boolean hasIntroductions = hasMatchingIntroductions(config, actualClass);
-        //这里实际上注册一系列AdvisorAdapter,用于将Advisor转化成MethodInterceptor
+        //这里实际上注册一系列 AdvisorAdapter,用于将Advisor转化成MethodInterceptor
         AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 
         for (Advisor advisor : config.getAdvisors()) {
