@@ -61,7 +61,7 @@ public abstract aspect AbstractAsyncExecutionAspect extends AsyncExecutionAspect
 	 * @return {@link Future} if the original method returns {@code Future};
 	 * {@code null} otherwise
 	 */
-	@SuppressAjWarnings("adviceDidNotMatch")
+	@SuppressWarnings("adviceDidNotMatch")
 	Object around() : asyncMethod() {
 		final MethodSignature methodSignature = (MethodSignature) thisJoinPointStaticPart.getSignature();
 

@@ -1716,7 +1716,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             // Return bean instance from factory.
             FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
             // Caches object obtained from FactoryBean if it is a singleton.
-            //如果从Bean工厂生产的Bean是单态模式的，则缓存
+            //如果从Bean工厂生产的Bean是单例模式的，则缓存
             if (mbd == null && containsBeanDefinition(beanName)) {
                 //从容器中获取指定名称的Bean定义，如果继承基类，则合并基类相关属性
                 mbd = getMergedLocalBeanDefinition(beanName);
